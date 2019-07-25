@@ -1,4 +1,4 @@
-import java.util.Random;
+import java.util.*;
 
 /**
 1. Создать 2мерный массив (матрица) M*N и заполнить его случайными числами.
@@ -15,24 +15,39 @@ public class HomeTask1 {
         int[][] arr = new int[M][N];
         for (int i = 0; i < M; i++) {
             for (int j = 0; j < N; j++) {
-                arr[i][j] = rand.nextInt(20);
+                arr[i][j] = rand.nextInt(15);
                 System.out.print(" " + arr[i][j]);
             }
             System.out.print("\n");
         }
 
         //sort
-        int[][] sortedArr = new int[M][N];
-        int newIndex = -1;
+        int[] plainArr = new int[M*N];
+        int newIndex = 0;
 
         for (int i = 0; i < M; i++) {
             for (int j = 0; j < N; j++) {
-                sortedArr[i][j] = rand.nextInt(20);
+                plainArr[newIndex] = arr[i][j];
+                newIndex++;
+            }
+        }
+        Arrays.sort(plainArr);
+
+        newIndex = 0;
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                arr[i][j] = plainArr[newIndex];
+                newIndex++;
+            }
+        }
+
+        System.out.println("Sorted matrix:\n");
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
                 System.out.print(" " + arr[i][j]);
             }
             System.out.print("\n");
         }
 
-        4*(2 - 1) + 0 = 4
     }
 }
