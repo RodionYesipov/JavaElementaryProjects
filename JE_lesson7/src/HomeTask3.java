@@ -16,7 +16,7 @@ import java.util.*;
 public class HomeTask3 {
     private static String dateReformat (String givenDate) throws DateTimeException {
         try {
-            DateTimeFormatter givenFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withLocale(Locale.US);
+            DateTimeFormatter givenFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy H:mm:ss").withLocale(Locale.US);
             int year = LocalDate.from(givenFormat.parse(givenDate)).getYear();
             int month = LocalDate.from(givenFormat.parse(givenDate)).getMonthValue();
             int day = LocalDate.from(givenFormat.parse(givenDate)).getDayOfMonth();
