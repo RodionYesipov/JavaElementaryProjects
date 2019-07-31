@@ -6,12 +6,12 @@
 * */
 
 public class HomeTask1 {
-    private static int fibonachiCall(int index){
-        if(index <= 0){
+    private static int fibonachiCall(int index) {
+        if (index <= 0) {
             return 0;
-        } else if(index == 1){
+        } else if (index == 1) {
             return 1;
-        } else if(index == 2){
+        } else if (index == 2) {
             return 1;
         } else {
             return fibonachiCall(index - 1) + fibonachiCall(index - 2);

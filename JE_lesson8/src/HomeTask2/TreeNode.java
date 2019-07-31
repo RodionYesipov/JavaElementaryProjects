@@ -5,11 +5,12 @@ public class TreeNode {
     int size = 0;
     TreeNode left;
     TreeNode right;
-    TreeNode(int x){
+
+    TreeNode(int x) {
         val = x;
     }
 
-    TreeNode(){
+    TreeNode() {
     }
 
     public void add(int value) {
@@ -18,7 +19,7 @@ public class TreeNode {
             this.val = tree.val;
             size++;
         } else {
-            addToTree(this,tree);
+            addToTree(this, tree);
         }
     }
 
@@ -49,22 +50,15 @@ public class TreeNode {
     }
 
     public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
-        //TreeNode mergedTree = this;
         if (t1 == null) {
-            if (t2 != null) {
-                t1.val = t2.val;
-            } else if (t1.left == null){
-                if (t2.left != null) {
-                    mergeTrees(t1.left, t2.left);
-                } else {
-                    mergeTrees(t1.right, t2.right);
-                }
-            }
-        } else {
-            t1.val = t1.val + t2.val;
-            mergeTrees(t1.left, t2.left);
-            mergeTrees(t1.right, t2.right);
+            return t2;
         }
-        return this;
+        if (t2 == null) {
+            return t1;
+        }
+        t1.val += t2.val;
+        t1.left = mergeTrees(t1.left, t2.left);
+        t1.right = mergeTrees(t1.right, t2.right);
+        return t1;
     }
 }
