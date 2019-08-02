@@ -9,12 +9,14 @@ public class MyTreeMap implements MyMap {
 
     @Override
     public void clear() {
-
+        root = null;
+        size = 0;
     }
 
     @Override
-    public boolean add(int value) {
+    public boolean add(String key, String value) {
         Entry entry = new Entry();
+        entry.key = key;
         entry.value = value;
         if(root == null){
             root = entry;
@@ -26,16 +28,17 @@ public class MyTreeMap implements MyMap {
     }
 
     private void addToTree(Entry root, Entry entry) {
-        if (entry.value < root.value) {
+        if (entry.key.compareTo(root.key) < 0) {
             if (root.left == null) {
                 root.left = entry;
                 size++;
             } else {
                 addToTree(root.left, entry);
             }
-        } else if (entry.value > root.value) {
+        } else if (entry.key.compareTo(root.key) > 0) {
             if (root.right == null) {
                 root.right = entry;
+                size++;
             } else {
                 addToTree(root.right, entry);
             }
@@ -46,52 +49,84 @@ public class MyTreeMap implements MyMap {
 
     @Override
     public boolean containsKey(String key) {
-        return false;
+        return createList().contains(key);
     }
 
     @Override
     public String get(String key) {
-        return null;
+        if(root == null){
+            return  null;
+        } else {
+            return getByKey(root,key).value;
+        }
+    }
+
+    private Entry getByKey(Entry entry, String key) {
+        if (entry.key.compareTo(key) == 0) {
+            return entry;
+        } else if (entry.key.compareTo(key) < 0) {
+            if (entry.right == null) {
+                return null;
+            } else {
+               return getByKey(entry.right, key);
+            }
+        } else {
+            if (entry.left == null) {
+                return null;
+            } else {
+                return getByKey(entry.left, key);
+            }
+        }
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     @Override
     public String remove(String key) {
-        return null;
-    }
-
-    @Override
-    public String put(String key, String value) {
+        //TODO
         return null;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public Entry[] toArray() {
-        return new Entry[0];
+        Entry[] entries = new Entry[size];
+        addToArray(root,entries);
+        return entries;
     }
 
-    private List<Integer> createList() {
-        List<Integer> list = new ArrayList<>();
-        addToList(root, list);
+    private void addToArray(Entry root, Entry[] entries) {
+        for (int i = 0; i < size; i++) {
+            if (root == null) {
+                return;
+            }
+            addToArray(root.left, entries);
+            entries[i] = root;
+            addToArray(root.right, entries);
+
+        }
+    }
+
+    private List<String> createList() {
+        List<String> list = new ArrayList<>();
+        addKeyToList(root, list);
         return list;
     }
 
-    private void addToList(Entry root, List<Integer> list) {
+    private void addKeyToList(Entry root, List<String> list) {
         if (root == null) {
             return;
         }
-        addToList(root.left, list);
-        list.add(root.value);
-        addToList(root.right, list);
+        addKeyToList(root.left, list);
+        list.add(root.key);
+        addKeyToList(root.right, list);
     }
 
     @Override

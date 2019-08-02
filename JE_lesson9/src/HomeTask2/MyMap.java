@@ -4,7 +4,7 @@ public interface MyMap {
 
     void clear();
 
-    boolean add(int value); // Returns true if this set did not already contain the specified element
+    boolean add(String key, String value); // Returns true if this set did not already contain the specified element
 
     boolean containsKey(String key);
 
@@ -13,8 +13,6 @@ public interface MyMap {
     boolean isEmpty();
 
     String remove(String key); // Returns the value to which this map previously associated the key, or null
-
-    String put(String key, String value); // Returns the previous value associated with key, or null
 
     int size();
 
