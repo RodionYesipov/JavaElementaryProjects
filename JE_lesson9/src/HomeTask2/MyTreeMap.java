@@ -6,6 +6,8 @@ import java.util.List;
 public class MyTreeMap implements MyMap {
     private Entry root;
     private int size = 0;
+    private boolean leftFl = false;
+    private boolean rightFl = false;
 
     @Override
     public void clear() {
@@ -86,7 +88,17 @@ public class MyTreeMap implements MyMap {
 
     @Override
     public String remove(String key) {
+        Entry removeEntry = getByKey(root,key);
         //TODO
+        if (removeEntry == null){
+            return null;
+        } else if(removeEntry.right == null){
+            if(removeEntry.left == null){
+                removeEntry.key = null;
+            } else {
+                return null;
+            }
+        }
         return null;
     }
 

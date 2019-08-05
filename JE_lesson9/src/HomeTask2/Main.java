@@ -21,6 +21,9 @@ public class Main {
         System.out.println("\nIs treeMap contains key " + key + "? " + myMap.containsKey(key));
 
         System.out.println("\nGet value of entry with key = " + key + ". Result: " + myMap.get(key));
+        myMap.remove("4");
+
+        System.out.println(myMap);
 
 
     }
