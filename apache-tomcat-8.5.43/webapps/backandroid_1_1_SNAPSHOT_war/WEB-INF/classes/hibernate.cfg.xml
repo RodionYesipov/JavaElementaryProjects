@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.url">jdbc:sybase:Tds:10.62.11.81:2639/RIMS</property>
+        <property name="hibernate.connection.driver_class">com.sybase.jdbc4.jdbc.SybDriver</property>
+        <property name="hibernate.connection.username">dn280790bds</property>
+        <property name="connection.password">denis2807</property>
+        <property name="show_sql">true</property>
+        <!-- DB schema will be updated if needed -->
+        <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+        <property name="dialect">org.hibernate.dialect.SybaseDialect</property>
+        <mapping class="bd.model.RtdmHistoryModel"/>
+        <mapping class="bd.model.DeclinePercent"/>
+        <mapping class="bd.model.DataTasks"/>
+        <mapping class="bd.model.Reason_KC"/>
+        <mapping class="bd.model.Portfel_EX_Avtodecision"/>
+        <mapping class="bd.model.MainpieChart"/>
+    </session-factory>
+</hibernate-configuration>

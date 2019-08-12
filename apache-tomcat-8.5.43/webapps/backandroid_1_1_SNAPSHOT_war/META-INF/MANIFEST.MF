@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Implementation-Title: backandroid
+Implementation-Version: 1.1-SNAPSHOT
+Built-By: dn280790bds
+Implementation-Vendor-Id: BackAndroid
+Spring-Boot-Version: 2.1.1.RELEASE
+Main-Class: org.springframework.boot.loader.WarLauncher
+Start-Class: aplication.BackandroidApplication
+Spring-Boot-Classes: WEB-INF/classes/
+Spring-Boot-Lib: WEB-INF/lib/
+Created-By: Apache Maven 3.3.9
+Build-Jdk: 1.8.0_212
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/backandroid
+
