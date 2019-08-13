@@ -1,9 +1,7 @@
 package hello;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -18,14 +16,17 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Random;
+
 @Configuration
 @EnableAutoConfiguration
 public class Application implements CommandLineRunner {
 
-    final static String queueName = "spring-boot";
+    final static String queueName = "spring-boot6";
 
     @Autowired
     RabbitTemplate rabbitTemplate;
+    BindingBuilder.DirectExchangeRoutingKeyConfigurer routingKeyConfigurer;
 
     @Bean
     Queue queue() {
@@ -33,13 +34,13 @@ public class Application implements CommandLineRunner {
     }
 
     @Bean
-    TopicExchange exchange() {
-        return new TopicExchange("spring-boot-exchange");
+    DirectExchange exchange() {
+        return new DirectExchange("directExchange",true,false);
     }
 
     @Bean
-    Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(queueName);
+    Binding binding(Queue queue, DirectExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with("directRoutingKey");
     }
 
     @Bean
@@ -70,6 +71,9 @@ public class Application implements CommandLineRunner {
         System.out.println("Waiting five seconds...");
         Thread.sleep(5000);
         System.out.println("Sending message...");
-        rabbitTemplate.convertAndSend(queueName, "Hello from RabbitMQ!");
+        Random random = new Random();
+        int temp = random.nextInt(100);
+        System.out.println("rand = " + temp);
+        rabbitTemplate.convertAndSend(exchange().getName(),"directRoutingKey","Hello " + temp);
     }
 }
