@@ -1,41 +1,40 @@
 package painter;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.Random;
+import java.io.*;
 
 public class Ball extends AbstractShape implements Shape {
 
-    private final GraphicsContext gc;
+    @Expose
     private boolean isActive = false;
+
 
     public Ball(GraphicsContext gc) {
         this.gc = gc;
     }
 
     public void draw() {
-         gc.setStroke(Color.BLACK);
+        gc.setStroke(Color.BLACK);
         gc.strokeOval(x, y, shapeSize, shapeSize);
         if (isActive) {
-            gc.setFill(Color.RED);
+            gc.setFill(Color.rgb(152, 251, 152));
             gc.fillOval(x, y, shapeSize, shapeSize);
         }
     }
 
     public void setShapeActive() {
         isActive = !isActive;
-        //draw();
     }
 
     @Override
     public boolean isActive() {
         return isActive;
     }
-
-   /* public void addShape(Shape ball) {
-        draw();
-    }*/
 
     public Ball(Ball ball) {
         this.x = ball.x;
@@ -45,4 +44,24 @@ public class Ball extends AbstractShape implements Shape {
         this.isActive = !ball.isActive;
     }
 
+    public void saveShape() throws Exception {
+        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+        String output = gson.toJson(this);
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream("src//" + this.getClass().getName() + this.getClass().hashCode() + ".txt")))) {
+            System.out.println("Start saving....." + this.getClass().getName() + this.getClass().hashCode());
+            writer.write(output);
+            System.out.println("End saving....." + this.getClass().getName() + this.getClass().hashCode());
+        }
+    }
+
+    public Ball(GraphicsContext gc, int x, int y, boolean isActive) {
+        this.gc = gc;
+        this.x = x;
+        this.y = y;
+        this.isActive = isActive;
+    }
+
+    public Ball() {
+    }
 }

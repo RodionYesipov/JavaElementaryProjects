@@ -1,7 +1,5 @@
 package painter;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -9,16 +7,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+
 
 public class Main extends Application {
 
     protected static final int BOARD_WIDTH = 800;
     protected static final int BOARD_HEIGHT = 600;
-
-   // Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    String output;
 
     private boolean closed = false;
     private Board board;
@@ -33,7 +29,8 @@ public class Main extends Application {
         Canvas canvas = new Canvas();
         canvas.setWidth(BOARD_WIDTH);
         canvas.setHeight(BOARD_HEIGHT);
-        BorderPane group = new BorderPane(canvas);
+        FlowPane group = new FlowPane();
+        group.getChildren().add(canvas);
         Scene scene = new Scene(group);
         primaryStage.setScene(scene);
         primaryStage.show();

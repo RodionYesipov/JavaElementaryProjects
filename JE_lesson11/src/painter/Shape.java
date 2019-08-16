@@ -26,5 +26,5 @@ public interface Shape {
 
     void setShapeActive();
 
-    //void addShape(Shape shape);
+    void saveShape() throws Exception;
 }

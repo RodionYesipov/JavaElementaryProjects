@@ -1,17 +1,26 @@
 package painter;
 
+import com.google.gson.annotations.Expose;
 import javafx.scene.canvas.GraphicsContext;
 
 public abstract class AbstractShape {
+    @Expose
     protected double x = 0;
+    @Expose
     protected double y = 0;
+    @Expose
     protected double xSpeed = 5;
+    @Expose
     protected double ySpeed = 5;
+    @Expose
     protected double deltaMove = 5;
-    protected int shapeSize = 50;
+    @Expose
+    protected int shapeSize = 70;
+    @Expose
     protected final double SCREEN_X = 800;
+    @Expose
     protected final double SCREEN_Y = 600;
-    boolean isActive = false;
+    @Expose
     protected GraphicsContext gc;
 
 
@@ -50,7 +59,6 @@ public abstract class AbstractShape {
     public double getShapeSize() {
         return shapeSize;
     }
-
 
 }
 

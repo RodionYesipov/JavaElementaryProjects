@@ -3,27 +3,29 @@ package painter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 
 import java.awt.geom.Point2D;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import static painter.Main.BOARD_HEIGHT;
 import static painter.Main.BOARD_WIDTH;
 
 public class Board {
+    @Expose
     private final GraphicsContext gc;
+    @Expose
     private List<Shape> shapes = new ArrayList<>();
 
+
     public Board(GraphicsContext gc) {
+        addShape(new Ball(gc, 100, 100, true));
+        addShape(new Square(gc, 250, 100, false));
+        addShape(new Triangle(gc, 200, 250, false));
         this.gc = gc;
     }
 
@@ -31,13 +33,24 @@ public class Board {
         shapes.add(shape);
     }
 
+    public void deleteShape() {
+        for (int i = 0; i < shapes.size(); i++) {
+            if (shapes.get(i).isActive()) {
+                shapes.remove(i);
+                i--;
+            }
+        }
+    }
+
     public void drawAll() {
         for (Shape shape : shapes) {
             shape.draw();
-            /*if (shape.isActive()) {
-                shape.draw();
-                //shape.setShapeActive();
-            }*/
+        }
+    }
+
+    public void saveAll() throws Exception {
+        for (Shape shape : shapes) {
+            shape.saveShape();
         }
     }
 
@@ -61,7 +74,6 @@ public class Board {
         for (Shape shape : cloneShapes) {
             shapes.add(shape);
         }
-        //drawAll();
     }
 
 
@@ -69,7 +81,6 @@ public class Board {
         for (Shape shape : shapes) {
             if (shape.isActive()) {
                 shape.moveRight();
-                shape.draw();
             }
         }
     }
@@ -78,7 +89,6 @@ public class Board {
         for (Shape shape : shapes) {
             if (shape.isActive()) {
                 shape.moveLeft();
-                shape.draw();
             }
         }
     }
@@ -87,7 +97,6 @@ public class Board {
         for (Shape shape : shapes) {
             if (shape.isActive()) {
                 shape.moveUp();
-                shape.draw();
             }
         }
     }
@@ -96,7 +105,6 @@ public class Board {
         for (Shape shape : shapes) {
             if (shape.isActive()) {
                 shape.moveDown();
-                shape.draw();
             }
         }
     }
@@ -105,9 +113,6 @@ public class Board {
         for (Shape shape : shapes) {
             if (shape.isActive()) {
                 shape.zoomIn();
-                shape.draw();
-            } else {
-                shape.draw();
             }
         }
     }
@@ -116,7 +121,6 @@ public class Board {
         for (Shape shape : shapes) {
             if (shape.isActive()) {
                 shape.zoomOut();
-                shape.draw();
             }
         }
     }
@@ -154,28 +158,111 @@ public class Board {
             addShape(new Square(gc));
         } else if (event.getCode() == KeyCode.DIGIT3) {
             addShape(new Triangle(gc));
+        } else if (event.getCode() == KeyCode.DELETE) {
+            deleteShape();
         } else if (event.getCode() == KeyCode.PAGE_UP) {
             zoomIn();
         } else if (event.getCode() == KeyCode.PAGE_DOWN) {
             zoomOut();
+        } else if (event.getCode() == KeyCode.V && event.isControlDown()) {
+            loadObjects();
         } else if (event.getCode() == KeyCode.C && event.isControlDown()) {
             cloneAll();
-        } else if (event.getCode() == KeyCode.S) {
+        } else if (event.getCode() == KeyCode.S && event.isControlDown()) {
             try {
                 saveAll();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
     }
 
-    private void saveAll() throws Exception {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Board out = this;
-        String output = gson.toJson(out);
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream("output.txt")))) {
-            writer.write(output);
+    private void loadObjects() {
+        Gson gson = new GsonBuilder().setLenient().setPrettyPrinting().serializeNulls().excludeFieldsWithoutExposeAnnotation().create();
+        StringBuilder sb = new StringBuilder();
+        Map<String, String> fileStringMap = loadFromFile(sb);
+        String json;
+        shapes.clear();
+        Ball restBall;
+        Square restSquare;
+        Triangle restTriangle;
+        int startIndex;
+        int endIndex;
+        String fileName;
+
+        for (Map.Entry<String, String> entry : fileStringMap.entrySet()) {
+
+            fileName = entry.getKey();
+            if (fileName.indexOf(Ball.class.getName()) > 0) {
+
+                startIndex = fileName.indexOf(Ball.class.getName());
+                endIndex = fileName.indexOf(Ball.class.getName()) + Ball.class.getName().length();
+                fileName = fileName.substring(startIndex, endIndex);
+
+            } else if (fileName.indexOf(Square.class.getName()) > 0) {
+
+                startIndex = fileName.indexOf(Square.class.getName());
+                endIndex = fileName.indexOf(Square.class.getName()) + Square.class.getName().length();
+                fileName = fileName.substring(startIndex, endIndex);
+
+            } else if (fileName.indexOf(Triangle.class.getName()) > 0) {
+
+                startIndex = fileName.indexOf(Triangle.class.getName());
+                endIndex = fileName.indexOf(Triangle.class.getName()) + Triangle.class.getName().length();
+                fileName = fileName.substring(startIndex, endIndex);
+
+            }
+
+            if (fileName.equals(Ball.class.getName())) {
+
+                json = entry.getValue();
+                restBall = gson.fromJson(json, Ball.class);
+                restBall.gc = this.gc;
+                shapes.add(restBall);
+
+            } else if (fileName.equals(Square.class.getName())) {
+
+                json = entry.getValue();
+                restSquare = gson.fromJson(json, Square.class);
+                restSquare.gc = this.gc;
+                shapes.add(restSquare);
+
+            } else if (fileName.equals(Triangle.class.getName())) {
+
+                json = entry.getValue();
+                restTriangle = gson.fromJson(json, Triangle.class);
+                restTriangle.gc = this.gc;
+                shapes.add(restTriangle);
+
+            }
         }
     }
+
+    private Map<String, String> loadFromFile(StringBuilder sb) {
+        File dir = new File("src//");
+        File[] listFiles = dir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith("txt");
+            }
+        });
+        System.out.println(Arrays.asList(listFiles));
+        Map<String, String> fileStringMap = new HashMap<>();
+
+        for (File file : listFiles) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String currentLine;
+                while ((currentLine = br.readLine()) != null) {
+                    sb.append(currentLine);
+                }
+                br.close();
+                fileStringMap.put(file.toString(), sb.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return fileStringMap;
+    }
+
 }
