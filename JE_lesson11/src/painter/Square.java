@@ -40,10 +40,10 @@ public class Square extends AbstractShape implements Shape {
         Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         String output = gson.toJson(this);
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream("src//" + this.getClass().getName() + this.getClass().hashCode() +  ".txt")))) {
-            System.out.println("Start saving....."+ this.getClass().getName() + this.getClass().hashCode());
+                new FileOutputStream("src//" + this.getClass().getName() + this.hashCode() +  ".txt")))) {
+            System.out.println("Start saving....."+ this.getClass().getName() + this.hashCode());
             writer.write(output);
-            System.out.println("End saving....." + this.getClass().getName() + this.getClass().hashCode());
+            System.out.println("End saving....." + this.getClass().getName() + this.hashCode());
         }
     }
 
