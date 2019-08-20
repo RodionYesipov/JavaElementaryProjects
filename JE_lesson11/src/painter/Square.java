@@ -47,6 +47,10 @@ public class Square extends AbstractShape implements Shape {
         }
     }
 
+    public void setGc() {
+        this.gc = super.gc;
+    }
+
     public Square(Square square) {
         this.x = square.x;
         this.y = square.y;

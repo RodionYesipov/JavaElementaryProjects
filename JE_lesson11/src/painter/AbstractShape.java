@@ -16,11 +16,10 @@ public abstract class AbstractShape {
     protected double deltaMove = 5;
     @Expose
     protected int shapeSize = 70;
-    @Expose
+
     protected final double SCREEN_X = 800;
-    @Expose
+
     protected final double SCREEN_Y = 600;
-    @Expose
     protected GraphicsContext gc;
 
 

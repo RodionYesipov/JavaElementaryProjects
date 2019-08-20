@@ -36,6 +36,11 @@ public class Triangle extends AbstractShape implements Shape {
     }
 
     @Override
+    public void setGc() {
+        this.gc = super.gc;
+    }
+
+    @Override
     public boolean isActive() {
         return isActive;
     }
@@ -50,6 +55,8 @@ public class Triangle extends AbstractShape implements Shape {
             System.out.println("End saving....." + this.getClass().getName() + this.hashCode());
         }
     }
+
+
 
     public Triangle(Triangle square) {
         this.x = square.x;

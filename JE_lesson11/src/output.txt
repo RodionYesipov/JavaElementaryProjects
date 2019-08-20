@@ -1,0 +1,22 @@
+{
+  "shapes": [
+    {
+      "isActive": true,
+      "x": 225.0,
+      "y": 100.0,
+      "xSpeed": 5.0,
+      "ySpeed": 5.0,
+      "deltaMove": 5.0,
+      "shapeSize": 70
+    },
+    {
+      "isActive": true,
+      "x": 125.0,
+      "y": 0.0,
+      "xSpeed": 5.0,
+      "ySpeed": 5.0,
+      "deltaMove": 5.0,
+      "shapeSize": 70
+    }
+  ]
+}

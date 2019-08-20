@@ -31,6 +31,11 @@ public class Ball extends AbstractShape implements Shape {
     }
 
     @Override
+    public void setGc() {
+        this.gc = super.gc;
+    }
+
+    @Override
     public boolean isActive() {
         return isActive;
     }

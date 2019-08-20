@@ -1,10 +1,13 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -43,10 +46,18 @@ public class HomeTask1 extends Application {
 
         group.getChildren().add(imageView);
 
+        group.getChildren().add(new Button("Hello"));
+
         group.setAlignment(Pos.CENTER);
 
         ///////////////////
         Scene scene = new Scene(group);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+            }
+        });
         primaryStage.setScene(scene);
         primaryStage.show();
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -54,6 +65,9 @@ public class HomeTask1 extends Application {
     }
 
     private void drawHouse(GraphicsContext gc) {
+
+        gc.setFill(Color.BLACK);
+        gc.fillOval(0,0,20,20);
         //house body
         double housebodyX = BOARD_WIDTH / 5.0;
         double housebodyY = BOARD_HEIGHT - 200;

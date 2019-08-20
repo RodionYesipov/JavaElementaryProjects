@@ -25,6 +25,6 @@ public interface Shape {
     double getShapeSize();
 
     void setShapeActive();
-
+    void setGc();
     void saveShape() throws Exception;
 }

@@ -16,7 +16,6 @@ import static painter.Main.BOARD_HEIGHT;
 import static painter.Main.BOARD_WIDTH;
 
 public class Board {
-    @Expose
     private final GraphicsContext gc;
     @Expose
     private List<Shape> shapes = new ArrayList<>();
@@ -27,6 +26,11 @@ public class Board {
         addShape(new Square(gc, 250, 100, false));
         addShape(new Triangle(gc, 200, 250, false));
         this.gc = gc;
+    }
+
+    public Board(List<Shape> shapes){
+        this.gc = null;
+        this.shapes = shapes;
     }
 
     public void addShape(Shape shape) {
@@ -49,9 +53,18 @@ public class Board {
     }
 
     public void saveAll() throws Exception {
-        for (Shape shape : shapes) {
+        /*for (Shape shape : shapes) {
             shape.saveShape();
+        }*/
+        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+        String output = gson.toJson(this);
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream("src//" + "output.txt")))) {
+            System.out.println("Start saving....." + this.getClass().getName());
+            writer.write(output);
+            System.out.println("End saving....." + this.getClass().getName());
         }
+
     }
 
     public void cloneAll() {
@@ -179,90 +192,28 @@ public class Board {
     }
 
     private void loadObjects() {
-        Gson gson = new GsonBuilder().setLenient().setPrettyPrinting().serializeNulls().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = new GsonBuilder().setLenient().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         StringBuilder sb = new StringBuilder();
-        Map<String, String> fileStringMap = loadFromFile(sb);
         String json;
         shapes.clear();
-        Ball restBall;
-        Square restSquare;
-        Triangle restTriangle;
-        int startIndex;
-        int endIndex;
-        String fileName;
-
-        for (Map.Entry<String, String> entry : fileStringMap.entrySet()) {
-
-            fileName = entry.getKey();
-            if (fileName.indexOf(Ball.class.getName()) > 0) {
-
-                startIndex = fileName.indexOf(Ball.class.getName());
-                endIndex = fileName.indexOf(Ball.class.getName()) + Ball.class.getName().length();
-                fileName = fileName.substring(startIndex, endIndex);
-
-            } else if (fileName.indexOf(Square.class.getName()) > 0) {
-
-                startIndex = fileName.indexOf(Square.class.getName());
-                endIndex = fileName.indexOf(Square.class.getName()) + Square.class.getName().length();
-                fileName = fileName.substring(startIndex, endIndex);
-
-            } else if (fileName.indexOf(Triangle.class.getName()) > 0) {
-
-                startIndex = fileName.indexOf(Triangle.class.getName());
-                endIndex = fileName.indexOf(Triangle.class.getName()) + Triangle.class.getName().length();
-                fileName = fileName.substring(startIndex, endIndex);
-
+        Board restBoard;
+        try (BufferedReader br = new BufferedReader(new FileReader("src//output.txt"))) {
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                sb.append(currentLine);
             }
-
-            if (fileName.equals(Ball.class.getName())) {
-
-                json = entry.getValue();
-                restBall = gson.fromJson(json, Ball.class);
-                restBall.gc = this.gc;
-                shapes.add(restBall);
-
-            } else if (fileName.equals(Square.class.getName())) {
-
-                json = entry.getValue();
-                restSquare = gson.fromJson(json, Square.class);
-                restSquare.gc = this.gc;
-                shapes.add(restSquare);
-
-            } else if (fileName.equals(Triangle.class.getName())) {
-
-                json = entry.getValue();
-                restTriangle = gson.fromJson(json, Triangle.class);
-                restTriangle.gc = this.gc;
-                shapes.add(restTriangle);
-
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
 
-    private Map<String, String> loadFromFile(StringBuilder sb) {
-        File dir = new File("src//");
-        File[] listFiles = dir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith("txt");
-            }
-        });
-        System.out.println(Arrays.asList(listFiles));
-        Map<String, String> fileStringMap = new HashMap<>();
+        json = sb.toString();
+        restBoard = gson.fromJson(json, Board.class);
 
-        for (File file : listFiles) {
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String currentLine;
-                while ((currentLine = br.readLine()) != null) {
-                    sb.append(currentLine);
-                }
-                br.close();
-                fileStringMap.put(file.toString(), sb.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        for (Shape shape:shapes) {
+            shape.setGc();
         }
-        return fileStringMap;
-    }
 
+        this.shapes = restBoard.shapes;
+
+    }
 }
